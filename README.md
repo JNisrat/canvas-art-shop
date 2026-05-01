@@ -67,7 +67,6 @@ Every push to `main` automatically builds Docker images, pushes to ECR and deplo
 | Week 2 | Dockerise all services | ✅ Done |
 | Week 3 | Deploy to AWS with Terraform | ✅ Done |
 | Week 4 | CI/CD with GitHub Actions | ✅ Done |
-| Week 5 | Monitoring with CloudWatch | 🔄 In Progress |
 
 ---
 
