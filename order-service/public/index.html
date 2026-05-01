@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout — Canvas Art Shop</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Georgia", serif;
+        background: #faf9f7;
+        color: #2c2c2c;
+      }
+
+      /* ── HEADER ── */
+      header {
+        background: #1a1a2e;
+        color: white;
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header h1 {
+        font-size: 1.6rem;
+        letter-spacing: 2px;
+      }
+      .back-btn {
+        background: none;
+        border: 1px solid #aaa;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+      }
+
+      /* ── LAYOUT ── */
+      .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 0 20px;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 32px;
+      }
+
+      /* ── SECTION TITLES ── */
+      .section-title {
+        font-size: 1.2rem;
+        color: #1a1a2e;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e8b86d;
+        display: inline-block;
+      }
+
+      /* ── CHECKOUT FORM ── */
+      .checkout-form {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        color: #666;
+        margin-bottom: 6px;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: "Georgia", serif;
+        transition: border 0.2s;
+        background: #fafafa;
+      }
+      .form-group input:focus,
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #1a1a2e;
+        background: white;
+      }
+      .form-group textarea {
+        resize: none;
+        height: 80px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .divider {
+        border: none;
+        border-top: 1px solid #eee;
+        margin: 24px 0;
+      }
+
+      /* ── PAYMENT SECTION ── */
+      .payment-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #1a1a2e;
+        margin-bottom: 16px;
+      }
+
+      .card-icons {
+        margin-bottom: 14px;
+        font-size: 1.4rem;
+        letter-spacing: 6px;
+      }
+
+      /* ── PLACE ORDER BUTTON ── */
+      .place-order-btn {
+        width: 100%;
+        background: #1a1a2e;
+        color: white;
+        border: none;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 1.05rem;
+        font-family: "Georgia", serif;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: background 0.2s;
+      }
+      .place-order-btn:hover {
+        background: #0f3460;
+      }
+      .place-order-btn:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
+
+      /* ── ORDER SUMMARY ── */
+      .order-summary {
+        background: white;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+      }
+
+      .summary-items {
+        margin-bottom: 20px;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        gap: 12px;
+      }
+      .summary-item:last-child {
+        border-bottom: none;
+      }
+
+      .item-info {
+        flex: 1;
+      }
+      .item-title {
+        font-size: 0.95rem;
+        color: #1a1a2e;
+        margin-bottom: 3px;
+      }
+      .item-meta {
+        font-size: 0.78rem;
+        color: #999;
+      }
+      .item-price {
+        font-weight: bold;
+        color: #c0392b;
+        white-space: nowrap;
+      }
+
+      .remove-btn {
+        background: none;
+        border: none;
+        color: #ccc;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 0 4px;
+        transition: color 0.2s;
+      }
+      .remove-btn:hover {
+        color: #e74c3c;
+      }
+
+      .summary-totals {
+        border-top: 2px solid #1a1a2e;
+        padding-top: 16px;
+      }
+
+      .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        color: #555;
+      }
+      .total-row.grand {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1a1a2e;
+        margin-top: 8px;
+      }
+
+      .empty-cart {
+        text-align: center;
+        padding: 30px 0;
+        color: #aaa;
+        font-size: 0.95rem;
+      }
+      .empty-cart div {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+
+      /* ── SUCCESS SCREEN ── */
+      .success-screen {
+        display: none;
+        max-width: 560px;
+        margin: 80px auto;
+        text-align: center;
+        background: white;
+        border-radius: 16px;
+        padding: 48px 40px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+      }
+      .success-screen.active {
+        display: block;
+      }
+      .success-icon {
+        font-size: 4rem;
+        margin-bottom: 16px;
+      }
+      .success-screen h2 {
+        font-size: 1.8rem;
+        color: #1a1a2e;
+        margin-bottom: 12px;
+      }
+      .success-screen p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 8px;
+      }
+
+      .order-details-box {
+        background: #f5f9ff;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 24px 0;
+        text-align: left;
+      }
+      .order-details-box h4 {
+        font-size: 0.85rem;
+        color: #999;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        color: #444;
+      }
+      .detail-row strong {
+        color: #1a1a2e;
+      }
+
+      .continue-btn {
+        background: #e8b86d;
+        color: #1a1a2e;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 8px;
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #e74c3c;
+        color: white;
+        padding: 14px 22px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 999;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+
+      @media (max-width: 720px) {
+        .container {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header>
+      <h1>🎨 Canvas Art Shop</h1>
+      <button
+        class="back-btn"
+        onclick="window.location.href = 'http://localhost:3002'"
+      >
+        ← Back to Gallery
+      </button>
+    </header>
+
+    <!-- MAIN CHECKOUT LAYOUT -->
+    <div class="container" id="checkout-container">
+      <!-- LEFT: FORM -->
+      <div class="checkout-form">
+        <div class="section-title">Shipping Details</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" id="firstName" placeholder="Nisrat" />
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" id="lastName" placeholder="Jahan" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="nisrat@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label>Delivery Address</label>
+          <textarea
+            id="address"
+            placeholder="123 Art Street, Brisbane QLD 4000"
+          ></textarea>
+        </div>
+
+        <hr class="divider" />
+
+        <div class="payment-title">Payment Details</div>
+        <div class="card-icons">💳 🏦 📱</div>
+
+        <div class="form-group">
+          <label>Card Number</label>
+          <input
+            type="text"
+            id="cardNumber"
+            placeholder="4242 4242 4242 4242"
+            maxlength="19"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Expiry Date</label>
+            <input type="text" id="expiry" placeholder="MM/YY" maxlength="5" />
+          </div>
+          <div class="form-group">
+            <label>CVV</label>
+            <input type="text" id="cvv" placeholder="123" maxlength="3" />
+          </div>
+        </div>
+
+        <button
+          class="place-order-btn"
+          id="place-order-btn"
+          onclick="placeOrder()"
+        >
+          🛍️ Place Order
+        </button>
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <div class="order-summary">
+        <div class="section-title">Order Summary</div>
+        <div class="summary-items" id="summary-items">
+          <div class="empty-cart">
+            <div>🛒</div>
+            No items in cart yet.<br />
+            <a href="http://localhost:3002" style="color: #1a1a2e"
+              >Browse paintings →</a
+            >
+          </div>
+        </div>
+        <div class="summary-totals" id="summary-totals" style="display: none">
+          <div class="total-row">
+            <span>Subtotal</span>
+            <span id="subtotal">$0</span>
+          </div>
+          <div class="total-row">
+            <span>Shipping</span>
+            <span style="color: #27ae60">Free</span>
+          </div>
+          <div class="total-row grand">
+            <span>Total</span>
+            <span id="grand-total">$0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS SCREEN -->
+    <div class="success-screen" id="success-screen">
+      <div class="success-icon">🎉</div>
+      <h2>Order Confirmed!</h2>
+      <p>Thank you for your purchase. Your painting is on its way!</p>
+
+      <div class="order-details-box">
+        <h4>Order Details</h4>
+        <div class="detail-row">
+          <span>Order ID</span>
+          <strong id="success-order-id"></strong>
+        </div>
+        <div class="detail-row">
+          <span>Customer</span>
+          <strong id="success-name"></strong>
+        </div>
+        <div class="detail-row">
+          <span>Email</span>
+          <strong id="success-email"></strong>
+        </div>
+        <div class="detail-row">
+          <span>Items</span>
+          <strong id="success-items"></strong>
+        </div>
+        <div class="detail-row">
+          <span>Total Paid</span>
+          <strong id="success-total" style="color: #c0392b"></strong>
+        </div>
+        <div class="detail-row">
+          <span>Status</span>
+          <strong style="color: #27ae60">✅ Confirmed</strong>
+        </div>
+      </div>
+
+      <button class="continue-btn" onclick="continueShopping()">
+        Continue Shopping
+      </button>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      // ── LOAD CART FROM LOCALSTORAGE ──
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      renderSummary();
+
+      function renderSummary() {
+        const container = document.getElementById("summary-items");
+        const totalsBox = document.getElementById("summary-totals");
+
+        if (cart.length === 0) {
+          container.innerHTML = `
+          <div class="empty-cart">
+            <div>🛒</div>
+            No items in cart yet.<br/>
+            <a href="http://localhost:3002" style="color:#1a1a2e;">Browse paintings →</a>
+          </div>`;
+          totalsBox.style.display = "none";
+          return;
+        }
+
+        container.innerHTML = cart
+          .map(
+            (item, index) => `
+        <div class="summary-item">
+          <div class="item-info">
+            <div class="item-title">${item.title}</div>
+            <div class="item-meta">${item.medium || "Canvas Painting"}</div>
+          </div>
+          <span class="item-price">$${item.price}</span>
+          <button class="remove-btn" onclick="removeItem(${index})">✕</button>
+        </div>
+      `,
+          )
+          .join("");
+
+        const subtotal = cart.reduce((sum, i) => sum + i.price, 0);
+        document.getElementById("subtotal").innerText = `$${subtotal}`;
+        document.getElementById("grand-total").innerText = `$${subtotal}`;
+        totalsBox.style.display = "block";
+      }
+
+      function removeItem(index) {
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        renderSummary();
+      }
+
+      // ── FORMAT CARD NUMBER ──
+      document.getElementById("cardNumber").addEventListener("input", (e) => {
+        let v = e.target.value.replace(/\D/g, "").substring(0, 16);
+        e.target.value = v.replace(/(.{4})/g, "$1 ").trim();
+      });
+
+      // ── FORMAT EXPIRY ──
+      document.getElementById("expiry").addEventListener("input", (e) => {
+        let v = e.target.value.replace(/\D/g, "").substring(0, 4);
+        if (v.length >= 2) v = v.substring(0, 2) + "/" + v.substring(2);
+        e.target.value = v;
+      });
+
+      // ── PLACE ORDER ──
+      async function placeOrder() {
+        const firstName = document.getElementById("firstName").value.trim();
+        const lastName = document.getElementById("lastName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const address = document.getElementById("address").value.trim();
+        const cardNumber = document.getElementById("cardNumber").value.trim();
+        const expiry = document.getElementById("expiry").value.trim();
+        const cvv = document.getElementById("cvv").value.trim();
+
+        // Validation
+        if (!firstName || !lastName || !email || !address) {
+          return showToast("Please fill in all shipping details");
+        }
+        if (!cardNumber || !expiry || !cvv) {
+          return showToast("Please fill in all payment details");
+        }
+        if (cart.length === 0) {
+          return showToast("Your cart is empty!");
+        }
+
+        const btn = document.getElementById("place-order-btn");
+        btn.disabled = true;
+        btn.innerText = "Processing...";
+
+        try {
+          const res = await fetch("/orders", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              customerName: `${firstName} ${lastName}`,
+              email,
+              address,
+              items: cart,
+            }),
+          });
+
+          const data = await res.json();
+
+          if (res.ok) {
+            showSuccess(data.order);
+            localStorage.removeItem("cart");
+            cart = [];
+          } else {
+            showToast(data.message || "Something went wrong");
+            btn.disabled = false;
+            btn.innerText = "🛍️ Place Order";
+          }
+        } catch (err) {
+          showToast("Could not connect to order service");
+          btn.disabled = false;
+          btn.innerText = "🛍️ Place Order";
+        }
+      }
+
+      // ── SHOW SUCCESS ──
+      function showSuccess(order) {
+        document.getElementById("checkout-container").style.display = "none";
+        const screen = document.getElementById("success-screen");
+        screen.classList.add("active");
+
+        document.getElementById("success-order-id").innerText = `#${order.id}`;
+        document.getElementById("success-name").innerText = order.customerName;
+        document.getElementById("success-email").innerText = order.email;
+        document.getElementById("success-items").innerText =
+          `${order.items.length} painting(s)`;
+        document.getElementById("success-total").innerText = `$${order.total}`;
+      }
+
+      function continueShopping() {
+        window.location.href = "http://localhost:3002";
+      }
+
+      // ── TOAST ──
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.innerText = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+    </script>
+  </body>
+</html>

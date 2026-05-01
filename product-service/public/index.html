@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canvas Art Shop</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a1a2e;
+        --ink-2: #0f3460;
+        --bg: #ffffff;
+        --paper: #f6f1e9;
+        --muted: #7a7a7a;
+        --accent: #b5523f;
+        --card: #ffffff;
+        --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        --radius: 16px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Helvetica,
+          Arial,
+          "Apple Color Emoji",
+          "Segoe UI Emoji";
+        background: var(--bg);
+        color: #1d1d1f;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      img {
+        padding-top: 20px;
+        padding-right: 20px;
+        padding-bottom: 20px;
+        padding-left: 20px;
+      }
+
+      #hero-img-1,
+      #hero-img-2 {
+        padding-top: 0px;
+        padding-right: 0px;
+        padding-bottom: 0px;
+        padding-left: 0px;
+      }
+
+      /* ── TOP NAV ── */
+      .topbar {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 18px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .brand {
+        font-family: "Pacifico", cursive;
+        font-weight: 400;
+        font-size: 26px;
+        letter-spacing: 0.2px;
+        color: #111827;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .cart-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        border-radius: 10px;
+      }
+      .cart-btn:hover {
+        background: #f5f5f5;
+      }
+      .cart-icon {
+        width: 22px;
+        height: 22px;
+        display: inline-grid;
+        place-items: center;
+      }
+      .cart-count {
+        min-width: 22px;
+        height: 22px;
+        padding: 0 7px;
+        border-radius: 999px;
+        background: #111827;
+        color: #fff;
+        font-size: 12px;
+        display: inline-grid;
+        place-items: center;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 12px 22px 36px;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 26px;
+        align-items: center;
+      }
+      .hero-copy h1 {
+        font-size: clamp(38px, 4vw, 54px);
+        line-height: 1.05;
+        letter-spacing: -0.5px;
+        margin-bottom: 14px;
+        color: #111827;
+      }
+      .hero-copy p {
+        color: #6b7280;
+        font-size: 15px;
+        max-width: 380px;
+        line-height: 1.6;
+        margin-bottom: 18px;
+      }
+      .hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 0px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .hero-cta:hover {
+        filter: brightness(0.97);
+      }
+      .hero-images {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+      .hero-images .img {
+        width: 100%;
+        height: 470px;
+        border-radius: 0px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        background: #e5e7eb;
+      }
+      .hero-images img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .hero-images .img:first-child {
+        transform: none;
+      }
+
+      /* ── SECTION: CHOOSE ── */
+      .section {
+        padding: 28px 0 36px;
+        background: var(--paper);
+      }
+      #choose {
+        height: 620px;
+        color: rgba(29, 29, 31, 1);
+      }
+      .section-inner {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 22px;
+      }
+      .section-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+      }
+      .section-head h2 {
+        font-size: 22px;
+        color: #111827;
+        letter-spacing: -0.2px;
+      }
+      .slider-controls {
+        display: flex;
+        gap: 10px;
+      }
+      .icon-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        border: 1px solid rgba(17, 24, 39, 0.12);
+        background: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+      .icon-btn:hover {
+        background: rgba(255, 255, 255, 1);
+      }
+
+      .slider {
+        overflow: hidden;
+        border-radius: 0px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-bottom-left-radius: 0px;
+        background: rgba(255, 255, 255, 0.55);
+        padding: 22px;
+        height: 460px;
+      }
+      .slider-track {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(240px, 1fr);
+        gap: 18px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding-bottom: 8px;
+      }
+      .slider-track::-webkit-scrollbar {
+        height: 10px;
+      }
+      .slider-track::-webkit-scrollbar-thumb {
+        background: rgba(17, 24, 39, 0.18);
+        border-radius: 999px;
+      }
+      .slider-track::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.35);
+        border-radius: 999px;
+      }
+
+      .tile {
+        background: var(--card);
+        border-radius: 0px;
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        scroll-snap-align: start;
+        cursor: pointer;
+        display: grid;
+        grid-template-rows: 280px auto;
+      }
+      .tile img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+        background-color: rgba(255, 255, 255, 1);
+      }
+      .tile-body {
+        padding: 14px 14px 12px;
+      }
+      .tile-title {
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 6px;
+        font-size: 14px;
+      }
+      .tile-sub {
+        font-size: 12px;
+        color: #6b7280;
+      }
+      .tile-foot {
+        padding: 12px 14px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+      }
+      .tile-price {
+        font-weight: 800;
+        color: #111827;
+        letter-spacing: -0.2px;
+      }
+      .tile-add {
+        width: 42px;
+        height: 42px;
+        border-radius: 0px;
+        border: none;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+      .tile-add:hover {
+        filter: brightness(0.97);
+      }
+
+      /* ── ORDER CUSTOM ARTWORK ── */
+      .order {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 42px 22px 70px;
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 24px;
+        align-items: center;
+      }
+      .order h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #111827;
+      }
+      .order p {
+        color: #6b7280;
+        line-height: 1.6;
+        font-size: 14px;
+        max-width: 360px;
+      }
+
+      .order-card {
+        background: #fff;
+        border-radius: 0px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 18px;
+        align-items: center;
+      }
+      .order-form {
+        display: grid;
+        gap: 10px;
+      }
+      #custom-style,
+      #custom-name,
+      #custom-phone {
+        border-radius: 0px;
+      }
+      .input {
+        width: 100%;
+        border: 1px solid rgba(17, 24, 39, 0.14);
+        border-radius: 12px;
+        padding: 11px 12px;
+        font-size: 14px;
+        outline: none;
+        background: #fff;
+      }
+      .input:focus {
+        border-color: rgba(181, 82, 63, 0.55);
+        box-shadow: 0 0 0 4px rgba(181, 82, 63, 0.12);
+      }
+      .order-btn {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 12px 14px;
+        border-radius: 0px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-top: 2px;
+      }
+      .order-btn:hover {
+        filter: brightness(0.97);
+      }
+      .order-img {
+        width: 100%;
+        height: 230px;
+        border-radius: 0px;
+        overflow: hidden;
+        background: #e5e7eb;
+      }
+      .order-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #order-img {
+        color: rgba(255, 255, 255, 1);
+        padding: 0px;
+      }
+
+      /* ── MODAL ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 100;
+        justify-content: center;
+        align-items: center;
+        padding: 18px;
+      }
+      .modal-overlay.active {
+        display: flex;
+      }
+      .modal {
+        background: white;
+        border-radius: 18px;
+        width: 100%;
+        max-width: 620px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      .modal img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+      }
+      .modal-body {
+        padding: 22px;
+      }
+      .modal-body h2 {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+        color: #111827;
+      }
+      .modal-body .desc {
+        color: #4b5563;
+        line-height: 1.7;
+        margin-bottom: 14px;
+      }
+      .modal-meta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .meta-item {
+        background: #f5f5f5;
+        padding: 10px;
+        border-radius: 12px;
+      }
+      .meta-item span {
+        display: block;
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+      .meta-item strong {
+        font-size: 0.95rem;
+        color: #111827;
+      }
+      .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .modal-price {
+        font-size: 1.55rem;
+        font-weight: 900;
+        color: #111827;
+        letter-spacing: -0.3px;
+      }
+      .buy-btn {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 12px 18px;
+        border-radius: 12px;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .buy-btn:hover {
+        filter: brightness(0.97);
+      }
+      .close-btn {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: rgba(0, 0, 0, 0.35);
+        border: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        font-size: 18px;
+        color: #fff;
+        cursor: pointer;
+      }
+      .close-btn:hover {
+        background: rgba(0, 0, 0, 0.45);
+      }
+
+      /* ── TOAST ── */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: #111827;
+        color: white;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 13px;
+        opacity: 0;
+        transition: opacity 0.25s;
+        z-index: 999;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        max-width: min(440px, calc(100vw - 60px));
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .toast.show {
+        opacity: 1;
+      }
+
+      /* ── LOADING ── */
+      .loading {
+        text-align: center;
+        padding: 40px 0 10px;
+        font-size: 14px;
+        color: rgba(17, 24, 39, 0.6);
+      }
+
+      @media (max-width: 860px) {
+        .hero {
+          grid-template-columns: 1fr;
+        }
+        .hero-images {
+          grid-template-columns: 1fr 1fr;
+        }
+        .order {
+          grid-template-columns: 1fr;
+        }
+        .order-card {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 520px) {
+        .hero-images {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- TOP NAV -->
+    <div class="topbar">
+      <div class="nav-left">
+        <div class="brand" aria-label="NisStudio">NisStudio</div>
+      </div>
+
+      <div class="nav-right">
+        <button class="cart-btn" onclick="window.location.href = '/cart'">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Paintings and art<br />especially for you</h1>
+        <p>Author’s art for every taste.</p>
+        <button class="hero-cta" onclick="document.getElementById('choose').scrollIntoView({behavior:'smooth'})">
+          Choose a painting
+        </button>
+      </div>
+
+      <div class="hero-images" aria-hidden="true">
+        <div class="img">
+          <img
+            id="hero-img-1"
+            alt=""
+            src="/assets/hero-1.png"
+          />
+        </div>
+        <div class="img">
+          <img
+            id="hero-img-2"
+            alt=""
+            src="/assets/hero-2.png"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- CHOOSE A PAINTING -->
+    <section class="section" id="choose">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>Choose a painting</h2>
+          <div class="slider-controls">
+            <button class="icon-btn" onclick="scrollSlider(-1)" aria-label="Previous">
+              ←
+            </button>
+            <button class="icon-btn" onclick="scrollSlider(1)" aria-label="Next">
+              →
+            </button>
+          </div>
+        </div>
+
+        <div class="slider">
+          <div class="slider-track" id="gallery">
+            <div class="loading">Loading paintings...</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ORDER CUSTOM ARTWORK -->
+    <section class="order" id="order">
+      <div>
+        <h2>Order Custom Artwork</h2>
+        <p>
+          Choose a painting style, tell us your idea, and our artist will contact you
+          to confirm your order.
+        </p>
+      </div>
+
+      <div class="order-card">
+        <form class="order-form" onsubmit="submitCustomArtwork(event)">
+          <select class="input" id="custom-style" required>
+            <option value="" selected disabled>Choose a style</option>
+            <option>Portrait</option>
+            <option>Landscape</option>
+            <option>Abstract</option>
+            <option>Minimal</option>
+          </select>
+          <input class="input" id="custom-name" placeholder="Your name" required />
+          <input
+            class="input"
+            id="custom-phone"
+            placeholder="Your phone number"
+            required
+          />
+          <button class="order-btn" type="submit">Request artwork</button>
+        </form>
+
+        <div class="order-img" aria-hidden="true">
+          <img
+            id="order-img"
+            alt=""
+            src="/assets/order-custom.png"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+      <div class="modal">
+        <img id="modal-img" src="" alt="" />
+        <div class="modal-body">
+          <h2 id="modal-title"></h2>
+          <p class="desc" id="modal-desc"></p>
+          <div class="modal-meta">
+            <div class="meta-item">
+              <span>Artist</span>
+              <strong id="modal-artist"></strong>
+            </div>
+            <div class="meta-item">
+              <span>Medium</span>
+              <strong id="modal-medium"></strong>
+            </div>
+            <div class="meta-item">
+              <span>Size</span>
+              <strong id="modal-size"></strong>
+            </div>
+            <div class="meta-item">
+              <span>Availability</span>
+              <strong id="modal-stock"></strong>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <span class="modal-price" id="modal-price"></span>
+            <button class="buy-btn" id="modal-add-btn">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      updateCartCount();
+
+      // ── FETCH ALL PAINTINGS ──
+      async function loadPaintings() {
+        const res = await fetch("/products");
+        const paintings = await res.json();
+        renderGallery(paintings);
+        setHeroImages(paintings);
+      }
+
+      // ── RENDER GALLERY ──
+      function renderGallery(paintings) {
+        const gallery = document.getElementById("gallery");
+        gallery.innerHTML = paintings
+          .map(
+            (p) => `
+    <div class="tile" onclick="openModal(${p.id})" role="button" tabindex="0">
+      <img src="${p.image}" alt="${p.title}" />
+      <div>
+        <div class="tile-body">
+          <div class="tile-title">${p.title}</div>
+          <div class="tile-sub">${p.medium}</div>
+        </div>
+        <div class="tile-foot">
+          <span class="tile-price">$${p.price}</span>
+          <button class="tile-add" onclick="event.stopPropagation(); addToCart(${p.id}, ${JSON.stringify(
+              p.title,
+            )}, ${p.price}, ${JSON.stringify(p.medium)}, ${JSON.stringify(p.image)})" aria-label="Add to cart">
+            →
+          </button>
+        </div>
+      </div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      // ── OPEN MODAL ──
+      async function openModal(id) {
+        const res = await fetch(`/products/${id}`);
+        const p = await res.json();
+
+        document.getElementById("modal-img").src = p.image;
+        document.getElementById("modal-title").innerText = p.title;
+        document.getElementById("modal-desc").innerText = p.description;
+        document.getElementById("modal-artist").innerText = p.artist;
+        document.getElementById("modal-medium").innerText = p.medium;
+        document.getElementById("modal-size").innerText = p.size;
+        document.getElementById("modal-stock").innerText =
+          p.stock > 0 ? `${p.stock} available` : "Sold Out";
+        document.getElementById("modal-price").innerText = `$${p.price}`;
+        document.getElementById("modal-add-btn").onclick = () =>
+          addToCart(p.id, p.title, p.price, p.medium, p.image);
+
+        document.getElementById("modal-overlay").classList.add("active");
+      }
+
+      // ── CLOSE MODAL ──
+      function closeModal() {
+        document.getElementById("modal-overlay").classList.remove("active");
+      }
+
+      // ── ADD TO CART ──
+      function addToCart(id, title, price, medium, image) {
+        cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        cart.push({ id, title, price, medium, image });
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount();
+        showToast(`"${title}" added to cart`);
+      }
+
+      // ── UPDATE CART COUNT ──
+      function updateCartCount() {
+        cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        document.getElementById("cart-count").innerText = cart.length;
+      }
+
+      function scrollSlider(direction) {
+        const track = document.getElementById("gallery");
+        const delta = Math.max(260, Math.floor(track.clientWidth * 0.75));
+        track.scrollBy({ left: direction * delta, behavior: "smooth" });
+      }
+
+      function setHeroImages(paintings) {
+        // Hero images are local assets (see /public/assets).
+        // Keep this as a no-op so the rest of the page logic stays unchanged.
+      }
+
+      function submitCustomArtwork(e) {
+        e.preventDefault();
+        const style = document.getElementById("custom-style").value;
+        const name = document.getElementById("custom-name").value.trim();
+        const phone = document.getElementById("custom-phone").value.trim();
+
+        if (!style || !name || !phone) return;
+        showToast("Thanks! We’ll contact you soon.");
+        e.target.reset();
+      }
+
+      // ── TOAST ──
+      function showToast(msg) {
+        const toast = document.getElementById("toast");
+        toast.innerText = msg;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 2500);
+      }
+
+      // Close modal on overlay click
+      document
+        .getElementById("modal-overlay")
+        .addEventListener("click", (e) => {
+          if (e.target === document.getElementById("modal-overlay"))
+            closeModal();
+        });
+
+      loadPaintings();
+    </script>
+  </body>
+</html>

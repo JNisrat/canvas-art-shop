@@ -1,0 +1,29 @@
+services:
+  user-service:
+    build:
+      context: ./user-service
+    environment:
+      PORT: "3001"
+      JWT_SECRET: "${JWT_SECRET:-dev-secret-change-me}"
+    ports:
+      - "3001:3001"
+
+  order-service:
+    build:
+      context: ./order-service
+    environment:
+      PORT: "3003"
+    ports:
+      - "3003:3003"
+
+  product-service:
+    build:
+      context: ./product-service
+    environment:
+      PORT: "3002"
+      ORDER_SERVICE_URL: "http://order-service:3003"
+    depends_on:
+      - order-service
+    ports:
+      - "3002:3002"
+
